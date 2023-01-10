@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
 import {addToCart} from '../../slices/cartReducer';
+import {openSidebar} from '../../slices/sidebarSlice';
 
 const Post = () => {
 
@@ -11,7 +12,8 @@ const Post = () => {
   const [ pin , setPin ] = useState("")
   const [ service , setService ] = useState()
 
-  const checkAvailability = async()=>{
+  const checkAvailability = async(e)=>{
+    e.preventDefault()
     let pins = await fetch(`http://localhost:3000/api/pincode`)
     const pinJson = await pins.json()
     
@@ -98,12 +100,15 @@ const Post = () => {
               <a href="" onClick={(e)=>{
                 e.preventDefault()
                 dispatch(addToCart({
-                id:1, 
-                title:"kuldeep",
-                image:"dkjjjjjjjjj",
-                price:879
-              
-              }))}} className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
+                id:slug, 
+                quantity:1,
+                price:879,
+                name:'Wear the code(XL ,Red)',
+                variant:'XL',
+                color:'red'
+              }))
+              dispatch(openSidebar())
+              }} className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
                 <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
                 <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
                 <span className="relative text-black group-hover:text-white">Add To Cart</span>

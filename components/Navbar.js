@@ -3,12 +3,28 @@ import React from 'react'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
 import { XMarkIcon, PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/outline/'
-import { ShoppingBagIcon} from '@heroicons/react/24/solid'
+import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { decreaseQuantity, increaseQty, removeItem } from '../slices/cartReducer'
+import { openSidebar , closeSidebar } from '../slices/sidebarSlice'
 
 const Navbar = () => {
+  const cart = useSelector(state => state.cart)
+  const isCart = useSelector(state => state.sidebar.isCart)
+  const dispatch = useDispatch()
+  
+  const sumQuantty = cart?.cart.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.quantity,
+    0,
+  );
 
-  const [isCart, setCart] = useState(false)
+  const sumPrice = cart?.cart.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.price,
+    0,
+  );
+
+
 
   return (
     <div className='flex justify-between  items-center bg-[#060002] py-6 px-0 md:px-4  '>
@@ -22,80 +38,54 @@ const Navbar = () => {
       </div>
 
       <div className="cart">
-        <button onClick={() => setCart(true)}><FaShoppingCart className='text-xl mr-4 hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
+        <button onClick={() => dispatch(openSidebar())}><FaShoppingCart className='text-xl mr-4 hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
       </div>
 
       <div className={`fixed z-50 top-0 right-0 h-[100vh] w-[375px] bg-[#060002] ${isCart ? 'translate-x-0 ease-in-out' : 'translate-x-96 ease-out '} duration-500 transition delay-100`}>
         <div className='relative h-full w-full'>
-          <XMarkIcon onClick={() => setCart(false)} className='absolute top-[-20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
+          <XMarkIcon onClick={() => dispatch(closeSidebar())} className='absolute top-[-20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
 
           <h2 className='text-xl text-white font-normal text-center mt-10'>Shopping Cart</h2>
 
-          <div className='flex justify-between w-full px-4 text-white pt-7'>
-            <div className='flex w-3/4 items-center'>
-              <span className='mr-2'>1.</span>
-              <p className="font-Poppins break-all">Tshirt - Wear the code</p>
+
+          {cart?.cart.map((item, i) => (
+            <div key={i} className='flex justify-between w-full px-4 text-white pt-7'>
+              <div className='flex w-3/4 items-center'>
+                <span className='mr-2'>{i + 1}</span>
+                <p className="font-Poppins break-all">{item.name}</p>
+              </div>
+              <div className='flex gap-3 w-1/4 items-center justify-center'>
+                <MinusCircleIcon onClick={() => dispatch(decreaseQuantity(item))} className='h-6 hover:scale-110 duration-300' />
+                <span>{item.quantity}</span>
+                <PlusCircleIcon onClick={() => dispatch(increaseQty(item))} className='h-6 hover:scale-110 duration-300' />
+              </div>
             </div>
-            <div className='flex gap-3 w-1/4 items-center justify-center'>
-              <MinusCircleIcon className='h-6 hover:scale-110 duration-300' />
-              <span>1</span>
-              <PlusCircleIcon className='h-6 hover:scale-110 duration-300' />
-            </div>
+          ))
+          }
+
+          <div className='mt-10 ml-6'>
+            <h2 className='text-white'>Subtotal:{" "}₹{sumQuantty * sumPrice}</h2>
           </div>
 
+          <div className="w-full mt-3 flex items-center justify-center gap-6">
 
-
-          <div className='flex justify-between w-full px-4 text-white pt-7'>
-            <div className='flex w-3/4 items-center'>
-              <span className='mr-2'>1.</span>
-              <p className="font-Poppins break-all">Tshirt - Wear the code</p>
-            </div>
-            <div className='flex gap-3 w-1/4 items-center justify-center'>
-              <MinusCircleIcon className='h-6 hover:scale-110 duration-300' />
-              <span>1</span>
-              <PlusCircleIcon className='h-6 hover:scale-110 duration-300' />
-            </div>
-          </div>
-
-
-
-          <div className='flex justify-between w-full px-4 text-white pt-7'>
-            <div className='flex w-3/4 items-center'>
-              <span className='mr-2'>1.</span>
-              <p className="font-Poppins break-all">Tshirt - Wear the code</p>
-            </div>
-            <div className='flex gap-3 w-1/4 items-center justify-center'>
-              <MinusCircleIcon className='h-6 hover:scale-110 duration-300' />
-              <span>1</span>
-              <PlusCircleIcon className='h-6 hover:scale-110 duration-300' />
-            </div>
-          </div>
-
-
-
-          <div className='flex justify-between w-full px-4 text-white pt-7'>
-            <div className='flex w-3/4 items-center'>
-              <span className='mr-2'>1.</span>
-              <p className="font-Poppins break-all">Tshirt - Wear the code</p>
-            </div>
-            <div className='flex gap-3 w-1/4 items-center justify-center'>
-              <MinusCircleIcon className='h-6 hover:scale-110 duration-300' />
-              <span>1</span>
-              <PlusCircleIcon className='h-6 hover:scale-110 duration-300' />
-            </div>
-          </div>
-
-
-          <div className="w-full mt-10 flex items-center justify-center">
-
-            <a href="#_" class="relative inline-flex items-center justify-center p-4 px-[2.4rem] py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-4 border-white rounded-md shadow-md group">
-              <span class="absolute inset-0 flex items-center justify-center w-fullh-full text-white duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
-                <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <Link href='/checkout' ><button onClick={() => dispatch(closeSidebar())} className="mt-1.5 relative inline-flex items-center justify-center p-4 px-[2.2rem] py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-4 border-white rounded-md shadow-md group">
+              <span className="absolute inset-0 flex items-center justify-center w-fullh-full text-white duration-300 -translate-x-full bg-white group-hover:translate-x-0 ease">
+                <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
               </span>
-              <span class="absolute flex gap-1 items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease text-xl">
-                <ShoppingBagIcon className='h-6 mb-[2px] text-white'/>Checkout</span>
-              <span class="relative invisible">Checkout</span>
-            </a>
+              <div className="absolute flex gap-1 items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease text-xl">
+                <ShoppingBagIcon className='h-6 mb-[2px] text-white font-Sans font-medium tracking-wide' />
+                <span className="relative text-white font-Sans font-medium tracking-wide text-base">Checkout</span>
+                </div>
+              <span className="relative invisible ">Checkout</span>
+            </button></Link>
+
+            <button className="relative inline-flex items-center justify-center font- px-4 py-[0.69rem] text-lg tracking-tighter text-white bg-gray-800 rounded-md group">
+              <span className="absolute inset-0 w-full h-full mt-1 ml-1 transition-all duration-300 ease-in-out bg-white rounded-md group-hover:mt-0 group-hover:ml-0"></span>
+              <span className="absolute inset-0 w-full h-full bg-black rounded-md border border-white"></span>
+              <span className="absolute inset-0 w-full h-full transition-all duration-200 ease-in-out delay-100 bg-white rounded-md opacity-0 group-hover:opacity-100"></span>
+              <span className="relative text-white transition-colors duration-200 ease-in-out delay-100 group-hover:text-black font-Sans font-medium group-hover:font-semibold tracking-wide text-base">Clear cart</span>
+            </button>
 
           </div>
 
