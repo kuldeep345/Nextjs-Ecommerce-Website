@@ -3,6 +3,7 @@ import React from 'react'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
 import { XMarkIcon, PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/outline/'
+import { UserCircleIcon } from '@heroicons/react/24/solid'
 import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,7 +28,7 @@ const Navbar = () => {
 
 
   return (
-    <div className='flex justify-between  items-center bg-[#060002] py-6 px-0 md:px-4  '>
+    <div className='flex sticky top-0 justify-between z-50 items-center bg-[#060002] py-6 px-0 md:px-4  '>
       <div className='nav'>
         <ul className="flex gap-6 md:gap-14 text-white items-center font-normal md:text-xl">
           <Link href={`/`}><li className='ml-4 hover:scale-110 duration-400 ease-in-out'>Home</li></Link>
@@ -37,8 +38,9 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="cart">
-        <button onClick={() => dispatch(openSidebar())}><FaShoppingCart className='text-xl mr-4 hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
+      <div className="flex justify-center items-center gap-8 mr-4">
+        <button><UserCircleIcon className=' hover:scale-125 duration-400 ease-in-out h-[40px] text-white' /></button>
+        <button onClick={() => dispatch(openSidebar())}><FaShoppingCart className='text-xl hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
       </div>
 
       <div className={`fixed z-50 top-0 right-0 h-[100vh] w-[375px] bg-[#060002] ${isCart ? 'translate-x-0 ease-in-out' : 'translate-x-96 ease-out '} duration-500 transition delay-100`}>
