@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useDispatch } from 'react-redux';
+import {addToCart} from '../../slices/cartReducer';
 
 const Post = () => {
 
   const router = useRouter()
   const { slug } = router.query
-
+  const dispatch = useDispatch()
   const [ pin , setPin ] = useState("")
   const [ service , setService ] = useState()
 
@@ -93,7 +95,15 @@ const Post = () => {
             </div>
             <div className="flex">
               <span className="title-font font-medium text-2xl text-gray-900">$58.00</span>
-              <a href="#_" className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
+              <a href="" onClick={(e)=>{
+                e.preventDefault()
+                dispatch(addToCart({
+                id:1, 
+                title:"kuldeep",
+                image:"dkjjjjjjjjj",
+                price:879
+              
+              }))}} className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
                 <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
                 <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
                 <span className="relative text-black group-hover:text-white">Add To Cart</span>
@@ -102,7 +112,7 @@ const Post = () => {
             </div>
             <div className="flex items-center mt-8 justify-start gap-10 mb-2">
               <input onChange={(e)=>setPin(e.target.value)} className="title-font py-1 px-2 font-medium text-lg text-gray-700 w-28 border border-gray-400 focus:outline-none rounded-sm" placeholder='Pincode' />
-              <a onClick={checkAvailability} className="relative inline-block px-4 py-1.5 font-medium group">
+              <a href="" onClick={checkAvailability} className="relative inline-block px-4 py-1.5 font-medium group">
                 <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
                 <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
                 <span className="relative text-black group-hover:text-white">Check</span>

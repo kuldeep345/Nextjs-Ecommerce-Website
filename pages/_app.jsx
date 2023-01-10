@@ -6,11 +6,13 @@ import Footer from '../components/Footer';
 
 function MyApp({ Component, pageProps }) {
   return (
+    <>
+    <Navbar/>
     <Provider store={store}>
-      <Navbar/>
       <Component {...pageProps} />
-      <Footer/>
     </Provider>
+      <Footer/>
+      </>
   );
 }
 
