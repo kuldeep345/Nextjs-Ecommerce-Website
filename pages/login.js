@@ -3,12 +3,9 @@ import React from 'react'
 
 const login = () => {
   return (
-    <div className='min-h-screen flex justify-center items-center'>
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 bg-black rounded-xl">
-        <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-        
-          Codestore
-        </a>
+    <div className='min-h-screen flex w-[109vw] sm:w-[100vw] bg-[#141516] md:pt-10'>
+      <div className="flex flex-col  py-8 mr-4 mx-auto  rounded-xl">
+     
         <div className="bg-white rounded-lg shadow dark:border md:mt-0 w-[350px] sm:w-[400px] md:w-[500] lg:min-[600px] xl:p-0 dark:bg-gray-800 dark:border-gray-700 ">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

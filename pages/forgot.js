@@ -2,9 +2,9 @@ import React from 'react'
 
 const forgot = () => {
   return (
-    <div className='min-h-[80vh] flex justify-center items-center'>
-    <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-6 bg-black rounded-xl">
-      <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+    <div className='min-h-screen flex  bg-[#141516] md:pt-10'>
+    <div className="flex flex-col md:px-6 py-8 mr-4 mx-auto lg:py-6">
+      <a href="" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
       
       Forgot password
       </a>

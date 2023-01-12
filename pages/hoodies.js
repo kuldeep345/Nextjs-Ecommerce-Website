@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const mugs = () => {
   return (
-    <section className="text-gray-600 body-font">
+    <section className="text-gray-600 body-font w-[109vw] sm:w-[100vw]">
     <div className="container px-5 py-8 mx-auto">
       <div className="flex flex-wrap md:gap-20 -m-4 justify-center lg:justify-evenly items-center mx-auto">
        <div className="lg:w-1/4 md:w-1/2 p-4 w-full flex flex-col justify-between shadow-lg ">

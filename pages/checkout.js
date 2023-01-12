@@ -23,7 +23,7 @@ const checkout = () => {
 
 
   return (
-    <div className='min-h-screen p-4 md:p-10 flex flex-col items-center gap-3'>
+    <div className='min-h-screen p-4 md:p-10 flex flex-col items-center gap-3 w-[109vw] sm:w-[100vw]'>
 
       <h1 className='text-xl text-gray-700 tracking-wider'>Checkout</h1>
 

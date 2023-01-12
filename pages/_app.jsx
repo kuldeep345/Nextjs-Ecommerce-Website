@@ -26,7 +26,9 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
       <Navbar/>
       <PersistGate loading={<Loader />} persistor={persistor}>
+        <div className='w-[100vw] overflow-x-hidden'>
         <Component {...pageProps} />
+        </div>
         </PersistGate>
         <Footer/>
       </Provider>

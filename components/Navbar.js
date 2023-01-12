@@ -28,7 +28,7 @@ const Navbar = () => {
 
 
   return (
-    <div className='flex sticky top-0 justify-between z-50 items-center bg-[#060002] py-6 px-0 md:px-4  '>
+    <div className='flex sticky top-0  justify-between z-50 items-center bg-[#060002] py-6 sm:px-8 md:px-16  '>
       <div className='nav'>
         <ul className="flex gap-6 md:gap-14 text-white items-center font-normal md:text-xl">
           <Link href={`/`}><li className='ml-4 hover:scale-110 duration-400 ease-in-out'>Home</li></Link>
@@ -38,14 +38,14 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="flex justify-center items-center gap-8 mr-4">
-        <button><UserCircleIcon className=' hover:scale-125 duration-400 ease-in-out h-[40px] text-white' /></button>
-        <button onClick={() => dispatch(openSidebar())}><FaShoppingCart className='text-xl hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
+      <div className="flex justify-center items-center gap-4 md:gap-8 mr-2">
+        <Link href="/login" className='mt-2'><button><UserCircleIcon className=' hover:scale-125 duration-400 ease-in-out md:h-[40px] text-white h-[34px] '/></button></Link>
+        <button onClick={() => dispatch(openSidebar())}><FaShoppingCart className='text-2xl hover:scale-125 duration-400 ease-in-out md:text-3xl text-white' /></button>
       </div>
 
       <div className={`fixed z-50 top-0 right-0 h-[100vh] w-[375px] bg-[#060002] ${isCart ? 'translate-x-0 ease-in-out' : 'translate-x-96 ease-out '} duration-500 transition delay-100`}>
         <div className='relative h-full w-full'>
-          <XMarkIcon onClick={() => dispatch(closeSidebar())} className='absolute top-[-20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
+          <XMarkIcon onClick={() => dispatch(closeSidebar())} className='absolute top-[20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
 
           <h2 className='text-xl text-white font-normal text-center mt-10'>Shopping Cart</h2>
 

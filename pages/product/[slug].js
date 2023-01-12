@@ -3,8 +3,12 @@ import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
 import {addToCart} from '../../slices/cartReducer';
 import {openSidebar} from '../../slices/sidebarSlice';
+import mongoose from 'mongoose';
+import Product from '../../models/Product';
 
-const Post = () => {
+const Post = ({products , variants}) => {
+
+  console.log(Object.keys(variants))
 
   const router = useRouter()
   const { slug } = router.query
@@ -26,7 +30,7 @@ const Post = () => {
   }
 
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
+    <section className="text-gray-600 body-font w-[100vw] !overflow-auto">
       <div className="container px-5 pt-10 md:py-12 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap gap-3 md:gap-20">
           <img alt="ecommerce" className="lg:w-[35%] w-full lg:h-auto h-80 object-contain object-center rounded" src="https://rukminim1.flixcart.com/image/832/832/kwzap3k0/shirt/1/z/u/xl-lstr-pink-p-v-creations-original-imag9jggbzwhzwgj.jpeg?q=70" />
@@ -130,6 +134,36 @@ const Post = () => {
       </div>
     </section>
   )
+}
+
+export async function getServerSideProps(context) {
+  if(!mongoose.connections[0].readyState){
+    await mongoose.connect(process.env.MONGO_URI)
+  }
+
+  let product = await Product.findOne({slug:context.query.slug})
+  let variants = await Product.find({title:product.title})
+
+
+  let colorSizeSlug = {}
+
+  for(let item of variants){
+    console.log(item)
+    if(Object.keys(colorSizeSlug).includes(item.color)){
+      colorSizeSlug[item.color][item.size] = { slug: item.slug }
+    }
+    else{
+      colorSizeSlug[item.color] = {}
+      colorSizeSlug[item.color][item.size] = { slug: item.slug }
+    }
+  }
+
+  return {
+    props:{
+      products:JSON.parse(JSON.stringify(product)),
+      variants:JSON.parse(JSON.stringify(colorSizeSlug))
+    }
+  }
 }
 
 export default Post
