@@ -8,19 +8,22 @@ import { ShoppingBagIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { decreaseQuantity, increaseQty, removeItem } from '../slices/cartReducer'
-import { openSidebar , closeSidebar } from '../slices/sidebarSlice'
+import { openSidebar , closeSidebar } from '../slices/sidebarReducer'
 
 const Navbar = () => {
-  const cart = useSelector(state => state.cart)
+  const cart = useSelector(state => state.cart.cart)
+
   const isCart = useSelector(state => state.sidebar.isCart)
+
+
   const dispatch = useDispatch()
   
-  const sumQuantty = cart?.cart.reduce(
+  const sumQuantty = cart?.reduce(
     (accumulator, currentValue) => accumulator + currentValue.quantity,
     0,
   );
 
-  const sumPrice = cart?.cart.reduce(
+  const sumPrice = cart?.reduce(
     (accumulator, currentValue) => accumulator + currentValue.price,
     0,
   );
@@ -45,12 +48,12 @@ const Navbar = () => {
 
       <div className={`fixed z-50 top-0 right-0 h-[100vh] w-[375px] bg-[#060002] ${isCart ? 'translate-x-0 ease-in-out' : 'translate-x-96 ease-out '} duration-500 transition delay-100`}>
         <div className='relative h-full w-full'>
-          <XMarkIcon onClick={() => dispatch(closeSidebar())} className='absolute top-[20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
+          <XMarkIcon onClick={() => dispatch(closeSidebar())} className='absolute -top-[20px] right-6 text-white h-8 hover:scale-125  duration-400 ease-in-out cursor-pointer' />
 
           <h2 className='text-xl text-white font-normal text-center mt-10'>Shopping Cart</h2>
 
 
-          {cart?.cart.map((item, i) => (
+          {cart?.map((item, i) => (
             <div key={i} className='flex justify-between w-full px-4 text-white pt-7'>
               <div className='flex w-3/4 items-center'>
                 <span className='mr-2'>{i + 1}</span>

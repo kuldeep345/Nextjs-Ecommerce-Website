@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
 import {addToCart} from '../../slices/cartReducer';
-import {openSidebar} from '../../slices/sidebarSlice';
+import {openSidebar} from '../../slices/sidebarReducer';
 import mongoose from 'mongoose';
 import Product from '../../models/Product';
 
-const Post = ({products , variants}) => {
+const Post = ({product , variants}) => {
 
-  console.log(Object.keys(variants))
+  useEffect(() => {
 
+    console.log(Object.keys(variants[color]))
+    
+  }, [])
+  
   const router = useRouter()
   const { slug } = router.query
   const dispatch = useDispatch()
   const [ pin , setPin ] = useState("")
   const [ service , setService ] = useState()
+
+  const [ color , setColor ] = useState(product.color) 
+  const [size , setsSize] = useState(product.size)
 
   const checkAvailability = async(e)=>{
     e.preventDefault()
@@ -29,6 +36,11 @@ const Post = ({products , variants}) => {
     }
   }
 
+  const refreshVariant = (newsize , newcolor)=>{
+    let url = `/product/${variants[newcolor][newsize]['slug']}`
+    window.location.href = url
+  }
+
   return (
     <section className="text-gray-600 body-font w-[100vw] !overflow-auto">
       <div className="container px-5 pt-10 md:py-12 mx-auto">
@@ -36,8 +48,8 @@ const Post = ({products , variants}) => {
           <img alt="ecommerce" className="lg:w-[35%] w-full lg:h-auto h-80 object-contain object-center rounded" src="https://rukminim1.flixcart.com/image/832/832/kwzap3k0/shirt/1/z/u/xl-lstr-pink-p-v-creations-original-imag9jggbzwhzwgj.jpeg?q=70" />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">The Catcher in the Rye</h1>
-            <div className="flex mb-4">
+            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} ({product.size}/{product.color})</h1>
+            {/* <div className="flex mb-4">
               <span className="flex items-center">
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-500" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -73,23 +85,30 @@ const Post = ({products , variants}) => {
                   </svg>
                 </a>
               </span>
-            </div>
-            <p className="leading-relaxed">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo juiceramps cornhole raw denim forage brooklyn. Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.</p>
+            </div> */}
+            <p className="leading-relaxed">{product.desc}</p>
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
                 <span className="mr-3">Color</span>
-                <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-                <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-                <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
+                {Object.keys(variants).includes('white') && Object.keys(variants['white']).includes(size) && <button onClick={()=>refreshVariant(size , 'white')} className={`border-2 rounded-full w-6 h-6 focus:outline-none ${color==='white' ? 'border-black' : 'border-gray-300'} `}></button>}
+                {Object.keys(variants).includes('red') && Object.keys(variants['red']).includes(size) && <button onClick={()=>refreshVariant(size , 'red')} className={`border-2 ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none ${color==='red' ? 'border-black' : 'border-gray-300'} `}></button>}
+                {Object.keys(variants).includes('green') && Object.keys(variants['green']).includes(size) && <button onClick={()=>refreshVariant(size , 'green')} className={`border-2 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${color==='green' ? 'border-black' : 'border-gray-300'} `}></button>}
+                {Object.keys(variants).includes('blue') && Object.keys(variants['blue']).includes(size) && <button onClick={()=>refreshVariant(size , 'blue')} className={`border-2 ml-1 bg-blue-500 rounded-full w-6 h-6 focus:outline-none ${color==='blue' ? 'border-black' : 'border-gray-300'} `}></button>}
+                {Object.keys(variants).includes('purple') &&  Object.keys(variants['purple']).includes(size) &&<button onClick={()=>refreshVariant(size , 'purple')} className={`border-2 ml-1 bg-purple-500 rounded-full w-6 h-6 focus:outline-none ${color==='purple' ? 'border-black' : 'border-gray-300'} `}></button>}
               </div>
               <div className="flex ml-6 items-center">
                 <span className="mr-3">Size</span>
                 <div className="relative">
-                  <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                    <option>SM</option>
-                    <option>M</option>
-                    <option>L</option>
-                    <option>XL</option>
+                  <select value={size} onChange={(e)=>{
+                    e.preventDefault()
+                    refreshVariant( e.target.value , color)
+                    }}
+                     className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                    {Object.keys(variants[color]).includes('S') && <option>S</option>}
+                    {Object.keys(variants[color]).includes('M') && <option>M</option>}
+                    {Object.keys(variants[color]).includes('L') && <option>L</option>}
+                    {Object.keys(variants[color]).includes('XL') && <option>XL</option>}
+                    {Object.keys(variants[color]).includes('XXL') && <option>XXL</option>}
                   </select>
                   <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
@@ -104,12 +123,12 @@ const Post = ({products , variants}) => {
               <a href="" onClick={(e)=>{
                 e.preventDefault()
                 dispatch(addToCart({
-                id:slug, 
-                quantity:1,
-                price:879,
-                name:'Wear the code(XL ,Red)',
-                variant:'XL',
-                color:'red'
+                id:product.slug, 
+                quantity:product.quantity,
+                price:product.price,
+                name:product.title,
+                variant:product.size,
+                color:product.color
               }))
               dispatch(openSidebar())
               }} className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
@@ -160,7 +179,7 @@ export async function getServerSideProps(context) {
 
   return {
     props:{
-      products:JSON.parse(JSON.stringify(product)),
+      product:JSON.parse(JSON.stringify(product)),
       variants:JSON.parse(JSON.stringify(colorSizeSlug))
     }
   }

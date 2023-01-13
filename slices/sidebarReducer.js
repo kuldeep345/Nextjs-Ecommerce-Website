@@ -4,7 +4,7 @@ const initialState = {
     isCart:false
 }
 
-const sidebarSlice = createSlice({
+const sidebarReducer = createSlice({
     name: 'sidebar',
     initialState,
     reducers:{
@@ -17,5 +17,5 @@ const sidebarSlice = createSlice({
     }
 })
 
-export const { openSidebar , closeSidebar } = sidebarSlice.actions
-export default sidebarSlice.reducer
+export const { openSidebar , closeSidebar } = sidebarReducer.actions
+export default sidebarReducer.reducer

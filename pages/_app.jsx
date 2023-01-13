@@ -1,11 +1,11 @@
 import '../styles/globals.css'
-import { store , persistor } from '../store/store'
+import { store , persistor} from '../store/store'
 import { Provider } from "react-redux";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { PersistGate } from 'redux-persist/integration/react';
-import Loader from '../components/Loader';
 import { useEffect, useState } from 'react';
+import { PersistGate } from 'redux-persist/integration/react';
+
 
 function MyApp({ Component, pageProps }) {
 
@@ -24,13 +24,11 @@ function MyApp({ Component, pageProps }) {
     return (
       <>
       <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
       <Navbar/>
-      <PersistGate loading={<Loader />} persistor={persistor}>
-        <div className='w-[100vw] overflow-x-hidden'>
         <Component {...pageProps} />
-        </div>
-        </PersistGate>
         <Footer/>
+      </PersistGate>
       </Provider>
         </>
     );
