@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux';
-import {addToCart} from '../../slices/cartReducer';
+import {addToCart , clearCart} from '../../slices/cartReducer';
+import {closeSidebar} from '../../slices/sidebarReducer';
 import {openSidebar} from '../../slices/sidebarReducer';
 import mongoose from 'mongoose';
 import Product from '../../models/Product';
+import {toast} from 'react-toastify'
 
 const Post = ({product , variants}) => {
 
-  useEffect(() => {
-
-    console.log(Object.keys(variants[color]))
-    
-  }, [])
-  
   const router = useRouter()
   const { slug } = router.query
   const dispatch = useDispatch()
@@ -25,14 +21,34 @@ const Post = ({product , variants}) => {
 
   const checkAvailability = async(e)=>{
     e.preventDefault()
-    let pins = await fetch(`http://localhost:3000/api/pincode`)
+    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
     const pinJson = await pins.json()
     
     if(pinJson.includes(pin)){
       setService(true)
+      toast.success('your pincode is serviceable', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
     }
     else{
       setService(false)
+      toast.error('Sorry ,your pincode is not serviceable', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
     }
   }
 
@@ -41,11 +57,26 @@ const Post = ({product , variants}) => {
     window.location.href = url
   }
 
+  const buyNow = async(e)=>{
+    e.preventDefault()
+      await dispatch(clearCart())
+      await dispatch(addToCart({
+        id:product.slug, 
+        quantity:product.quantity,
+        price:product.price,
+        name:product.title,
+        variant:product.size,
+        color:product.color
+      }))
+      await dispatch(closeSidebar())
+      router.push("/checkout")
+  }
+
   return (
     <section className="text-gray-600 body-font w-[100vw] !overflow-auto">
       <div className="container px-5 pt-10 md:py-12 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap gap-3 md:gap-20">
-          <img alt="ecommerce" className="lg:w-[35%] w-full lg:h-auto h-80 object-contain object-center rounded" src="https://rukminim1.flixcart.com/image/832/832/kwzap3k0/shirt/1/z/u/xl-lstr-pink-p-v-creations-original-imag9jggbzwhzwgj.jpeg?q=70" />
+          <img alt="ecommerce" className="lg:w-[35%] w-full lg:h-auto h-80 object-contain object-center rounded" src={product.img} />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest">BRAND NAME</h2>
             <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} ({product.size}/{product.color})</h1>
@@ -118,8 +149,15 @@ const Post = ({product , variants}) => {
                 </div>
               </div>
             </div>
-            <div className="flex">
-              <span className="title-font font-medium text-2xl text-gray-900">$58.00</span>
+            <div className="flex items-center">
+              <span className="title-font font-medium text-2xl text-gray-900">${product.price}</span>
+
+              <a href="" onClick={(e)=>buyNow(e)} className="relative ml-3 md:ml-6 inline-block px-4 py-1.5 font-medium group">
+                <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+                <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+                <span className="relative text-black group-hover:text-white">Buy Now</span>
+              </a>
+
               <a href="" onClick={(e)=>{
                 e.preventDefault()
                 dispatch(addToCart({
@@ -130,6 +168,18 @@ const Post = ({product , variants}) => {
                 variant:product.size,
                 color:product.color
               }))
+             
+              toast.success('Product added to cart', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+
               dispatch(openSidebar())
               }} className="ml-auto relative inline-block px-4 py-1.5 font-medium group">
                 <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
@@ -157,7 +207,7 @@ const Post = ({product , variants}) => {
 
 export async function getServerSideProps(context) {
   if(!mongoose.connections[0].readyState){
-    await mongoose.connect(process.env.MONGO_URI)
+    await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI)
   }
 
   let product = await Product.findOne({slug:context.query.slug})
@@ -167,7 +217,7 @@ export async function getServerSideProps(context) {
   let colorSizeSlug = {}
 
   for(let item of variants){
-    console.log(item)
+
     if(Object.keys(colorSizeSlug).includes(item.color)){
       colorSizeSlug[item.color][item.size] = { slug: item.slug }
     }

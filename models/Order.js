@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
-const OrderSchema = new  mongoose.Schema({
-    userId:{ typee:String , required:true },
 
+const OrderSchema = new  mongoose.Schema({
+    email:{ type:String , required:true },
+    orderId:{type:String , required:true},
+    paytmInfo:{type:String , default:''},
     products:[
         {
             productId:{type:String},
@@ -14,4 +16,6 @@ const OrderSchema = new  mongoose.Schema({
     status:{type:String , default:'Pending' , required:true}
 } , { timestamps:true} );
 
-export default mongoose.model("Order" , OrderSchema)
+mongoose.models = {}
+
+export default mongoose.models.Order || mongoose.model("Order" , OrderSchema)

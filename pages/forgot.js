@@ -1,9 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/dist/client/router'
 
-const forgot = () => {
+const Forgot = () => {
+  const router = useRouter()
+
+  useEffect(() => {
+    if(localStorage.getItem('token')){
+      router.push('/')
+    }
+  }, [])
+  
+
+
   return (
     <div className='min-h-screen flex  bg-[#141516] md:pt-10'>
-    <div className="flex flex-col md:px-6 py-8 mr-4 mx-auto lg:py-6">
+    <div className="flex flex-col md:px-6 py-8 mx-auto lg:py-6">
       <a href="" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
       
       Forgot password
@@ -29,4 +40,4 @@ const forgot = () => {
   )
 }
 
-export default forgot
+export default Forgot

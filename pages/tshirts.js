@@ -48,16 +48,16 @@ const tshirts = ({products}) => {
 
 export async function getServerSideProps(context){
   if(!mongoose.connections[0].readyState){
-    await mongoose.connect(process.env.MONGO_URI)
+    await mongoose.connect(process.env.NEXT_PUBLIC_MONGO_URI)
   }
 
-  let products = await Product.find()
+  let products = await Product.find({category:'tshirt'})
   
   const tshirt = {}
 
         for(let item of products){
             if(item.title in tshirt){
-                console.log(tshirt)
+              
                 if(!tshirt[item.title].color.includes(item.color) && item.availableQty > 0){
                         tshirt[item.title].color.push(item.color)
                 }
